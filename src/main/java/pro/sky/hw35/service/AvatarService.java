@@ -2,6 +2,7 @@ package pro.sky.hw35.service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import pro.sky.hw35.repository.StudentRepository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -73,8 +75,18 @@ public class AvatarService {
         }
     }
 
-        public ResponseEntity<byte[]> downloadFromDb(Long id) {
+        public ResponseEntity <byte[]> downloadFromDb(Long id) {
             Avatar avatar = avatarRepository.findById(id).get();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
+            headers.setContentLength(avatar.getData().length);
+            return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
+        }
+
+        public ResponseEntity <byte[]> getAllFromDb(Integer pageNumber, Integer pageSize) {
+            PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+            List<Avatar> avatars = avatarRepository.findAll(pageRequest).getContent();
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
             headers.setContentLength(avatar.getData().length);
