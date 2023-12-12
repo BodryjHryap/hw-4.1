@@ -43,9 +43,8 @@ public class AvatarController {
     }
 
     @GetMapping("/all-avatars-by-pagination")
-    public ResponseEntity<byte[]> getAllFromDb (@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
-        return avatarService.getAllFromDb(pageNumber, pageSize);
+    public ResponseEntity<List<Avatar>> getAllFromDb (@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
+        List<Avatar> avatars = avatarService.getAllFromDb(pageNumber,pageSize);
+        return ResponseEntity.ok(avatars);
     }
-
-
 }

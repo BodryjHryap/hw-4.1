@@ -83,13 +83,8 @@ public class AvatarService {
             return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
         }
 
-        public ResponseEntity <byte[]> getAllFromDb(Integer pageNumber, Integer pageSize) {
+        public List<Avatar> getAllFromDb(Integer pageNumber, Integer pageSize) {
             PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-            List<Avatar> avatars = avatarRepository.findAll(pageRequest).getContent();
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
-            headers.setContentLength(avatar.getData().length);
-            return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
+            return avatarRepository.findAll(pageRequest).getContent();
         }
 }
